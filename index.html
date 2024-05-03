@@ -1,0 +1,163 @@
+﻿
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>ReadingGate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.95, maximum-scale=0.95, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <meta http-equiv="Pragma" content="no-cache"> <!-- ← HTTP 1.0에서 사용하던 방법 -->
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0" />
+
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        form {
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <script src="./common/js/sweetalert.min.js"></script>
+    <script src="./common/js/jquery-2.1.4.min.js"></script>
+    <script src="./common/js/jquery-ui-1.8.21.min.js"></script>
+    <script src="./common/js/language.js"></script>
+
+    <script type="text/javascript">
+        let scriptglobal_functionURL = "./common/js/global_function.js?ver=" + Math.random();
+        let scriptglobal_functionElement = document.createElement("script");
+        scriptglobal_functionElement.src = scriptglobal_functionURL;
+        document.head.appendChild(scriptglobal_functionElement);
+    </script>
+
+    <script type="text/javascript">
+        var REF = {
+            //StudyId: "001104C2300001843",   // PK-001
+            StudyId: "001104C2300001846",   // PK-168
+            StudentHistoryId: "001104C2021000039",
+            //Round: "032",
+            SData: "gjUXmfgoqO1SvzGDvR7B871VVO8VBwEaYWqVXRsN6AOIwJF8ZxXm2BujMxWDX1P1vZBWpZgfLqifc/GDQq56CwJKbCZayCGk/scfowO3UF3WiqHRX1pQY0TgS9JQbSOsaP+QZAkzczExyytZSmkuVqaYaEk7dnWeaMfZv40a6ti3CRPhZUOCCpWurafwCkkhwDLCoo5z0qWZhS7IA1BrNA4zoCIBP/u2+dq/M7Ht6K28N+ALOTIsEVsIHW3bf6B0JttkcbWTAwoKWDy/uls9rT6tWYVx4s8ZgpHY7RoPuI4m22RxtZMDCrhqFBrM6VEpRyNz0mxscAjRMiQvKUvGQPmRScNHGlCOhqVbTOQTzP37qUvgiyhZXGBDnBKPOqwRetA0ecH/0WVUQ7nzIjqNpuJhCtbsIWBq",
+            Mode: "quiz",
+            //Mode: "super",
+        }
+
+        let intRound = 0;
+        let prekUrl = "";
+        let gvStorageStudyInfo;
+        let userMode = "";
+        let userType = "student";
+    </script>
+
+    <script type="text/javascript">
+        let gvLanguage = "KOR";
+
+        $(document).ready(function () {
+            var stringApiUrl = "https://appdev.readinggate.com:8443/v7/PreK/Api.jsp?ver=6.3&cmd=GetStudyInfo&StudyId=" + REF.StudyId + "&StudentHistoryId=" + REF.StudentHistoryId + "&SData=" + REF.SData;
+
+            switch (REF.Mode) {
+                case "quiz":
+                    userMode = "1";
+                    break;
+                case "review":
+                    userMode = "2";
+                    break;
+                case "super":
+                    userMode = "3";
+                    userType = "staff";
+                    break;
+                default:
+                    userMode = "1";
+                    break;
+            }
+
+            $.getJSON(stringApiUrl, function (apiData) {
+                if (apiData.result.result_cd == "0") {
+                    //sessionStorage.setItem('apiStudyInfo', '{"StudyId": "' + REF.StudyId + '", "StudentHistoryId": "' + REF.StudentHistoryId + '", "Round": "' + REF.Round + '", "SData": "' + REF.SData + '", "Mode": "' + REF.Mode + '", "StudyYn": "' + apiData.data.StudyYn + '", "StatusCode": "' + apiData.data.StatusCode + '", "UserMode": "' + userMode + '"}');
+                    sessionStorage.setItem('apiStudyInfo', '{"StudyId": "' + REF.StudyId + '", "StudentHistoryId": "' + REF.StudentHistoryId + '", "Round": "' + apiData.data.Round + '", "SData": "' + REF.SData + '", "Mode": "' + REF.Mode + '", "StudyYn": "' + apiData.data.StudyYn + '", "StatusCode": "' + apiData.data.StatusCode + '", "UserMode": "' + userMode + '"}');
+
+                    //sessionStorage.setItem('sslStudyInfo', '{"study_id": "' + REF.StudyId + '", "student_history_id": "' + REF.StudentHistoryId + '", "url": "", "user_type": "' + userType + '", "cust_id": "", "cust_type": "", "first_step": "", "mode": "' + userMode + '", "round": "' + REF.Round + '"}');
+                    sessionStorage.setItem('sslStudyInfo', '{"study_id": "' + REF.StudyId + '", "student_history_id": "' + REF.StudentHistoryId + '", "url": "", "user_type": "' + userType + '", "cust_id": "", "cust_type": "", "first_step": "", "mode": "' + userMode + '", "round": "' + apiData.data.Round + '"}');
+
+                    //intRound = REF.Round * 1;
+                    intRound = apiData.data.Round * 1;
+
+                    if (intRound < 27) {
+                        prekUrl = "PKAlphabetLand/";
+                    } else if (intRound >= 27 && intRound < 67) {
+                        prekUrl = "PKSoundLand/";
+                    } else if (intRound >= 67 && intRound < 167) {
+                        prekUrl = "PKPhonicsLand/";
+                    } else if (intRound >= 167 && intRound < 207) {
+                        prekUrl = "PKWordLand/";
+                    } else {
+                        alert("Round Error!");
+                    }
+
+                    // #####################################################################################
+                    // ################### sessionStorage apiStudyInfo 에서 값 가져오기 ####################
+                    // #####################################################################################
+                    var sessionStorageapiStudyInfo = sessionStorage.getItem("apiStudyInfo");
+                    //console.log(sessionStorageapiStudyInfo);
+
+                    var obj = $.parseJSON(sessionStorageapiStudyInfo);
+                    var gvStorageStudyInfo = new Array();
+
+                    gvStorageStudyInfo.StudyId = obj.StudyId;
+                    gvStorageStudyInfo.StudentHistoryId = obj.StudentHistoryId;
+                    gvStorageStudyInfo.Round = obj.Round;
+                    gvStorageStudyInfo.SData = obj.SData;
+                    gvStorageStudyInfo.Mode = obj.Mode;
+                    gvStorageStudyInfo.StudyYn = obj.StudyYn;
+                    gvStorageStudyInfo.StatusCode = obj.StatusCode;
+                    gvStorageStudyInfo.UserMode = obj.UserMode;
+                    // #####################################################################################
+
+                    // iframe에 파일 넣기
+                    var iframeSrc = "./" + prekUrl + "intro.html?arg1=" + intRound + "&arg2=" + userMode + "&arg3=" + REF.StudyId;
+                    document.getElementById("qzArea").src = iframeSrc;
+
+                    // Input 박스에 값 넣기
+                    //$("#apiStudyInfoStudyId").val(gvStorageStudyInfo.StudyId);
+                    //$("#apiStudyInfoStudentHistoryId").val(gvStorageStudyInfo.StudentHistoryId);
+                    //$("#apiStudyInfoMode").val(gvStorageStudyInfo.Mode);
+                    //$("#apiStudyInfoRound").val(gvStorageStudyInfo.Round);
+                    //$("#apiStudyInfoStudyYn").val(gvStorageStudyInfo.StudyYn);
+                    //$("#apiStudyInfoStatusCode").val(gvStorageStudyInfo.StatusCode);
+                    //$("#prekUrl").val(iframeSrc);
+
+                    // Input 박스에 값 넣지 않고 페이지 바로가기
+                    location.href = iframeSrc;
+                } else {
+                    swal("학습 정보를 가져올 수 없습니다. - PreK/index.html");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="divREF" style="display: none;">
+        apiStudyInfo.StudyId : <input type="text" name="apiStudyInfoStudyId" id="apiStudyInfoStudyId" value="" />
+        <br />apiStudyInfo.StudentHistoryId : <input type="text" name="apiStudyInfoStudentHistoryId" id="apiStudyInfoStudentHistoryId" value="" />
+        <br />apiStudyInfo.Mode : <input type="text" name="apiStudyInfoMode" id="apiStudyInfoMode" value="" /> (quiz, review, super)
+        <br />apiStudyInfo.Round : <input type="text" name="apiStudyInfoRound" id="apiStudyInfoRound" value="" />
+        <br />apiStudyInfo.StudyYn : <input type="text" name="apiStudyInfoStudyYn" id="apiStudyInfoStudyYn" value="" />
+        <br />apiStudyInfo.StatusCode : <input type="text" name="apiStudyInfoStatusCode" id="apiStudyInfoStatusCode" value="" />
+        <br />prekUrl : <input type="text" name="prekUrl" id="prekUrl" value="" />
+
+        <br /><iframe id="qzArea" style="width: 1000px; height:500px; border:0;" frameborder="0" src=""></iframe>
+    </div>
+
+</body>
+</html>

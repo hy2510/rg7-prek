@@ -1,0 +1,31 @@
+﻿
+<!DOCTYPE html>
+<!--[if lt IE 10 ]> <html class="oldIE"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--#include file="../../../assets/inc/_head.aspx"-->
+    <title>ReadingGate</title>
+	<script type="text/javascript">
+        if (self != top) {
+            top.location.replace(window.location.pathname + window.location.hash);
+        }
+		$(document).ready(function() {
+			if ( event.which==8 ) {
+				event.preventDefault();
+				return false;
+			}			
+		});
+	</script>
+    <style>
+        html, body { padding:0; margin:0; }
+        html, body { padding:0; margin:0; height:100%; width:100%; overflow: hidden;  }
+        iframe { width:100%; height:100%; }
+    </style>
+</head>
+<body>
+<!--[if (gt IE 9)|!(IE)]><!--> <iframe id="qzArea" style="height:100%; border:0;" frameborder="0" src="intro.aspx"></iframe> <!--<![endif]-->
+</body>
+</html>
+
