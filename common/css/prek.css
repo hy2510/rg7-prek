@@ -1,14 +1,64 @@
 ﻿body {
+    margin: 0 !important;
+  }
+
+a,
+div,
+img {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.clsFrame {
-    width: 1024px;
-    height: 641px;
-    margin:0 auto;
-    /*margin-top:15px;*/
-    border:0px solid red;
-    box-shadow:10px 10px 10px #808080;
+#form1 {
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
+  
+/* @media (orientation: portrait) {
+    #form1::after {
+        content: "화면을 가로로 돌려주세요.\ARotate the screen horizontally.\AXoay màn hình theo chiều ngang.";
+        white-space: pre;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #fff;
+        font-size: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #231f20;
+    }
+} */
+  
+.clsFrame {
+    min-width: 1024px;
+    min-height: 641px;
+    margin: 0 auto;
+    /*margin-top:15px;*/
+    /* border: 0px solid red; */
+    box-shadow: 0 0 10px #00000015;
+    position: relative;
+}
+
+@media (pointer: coarse) {
+    .clsFrame {
+        box-shadow: none;
+    }
+    @media (min-height: 700px) {
+        .clsFrame {
+        box-shadow: 0 0 10px #00000015;
+        }
+    }
+}
+  
 
 .clsWork {
     width: 1024px;

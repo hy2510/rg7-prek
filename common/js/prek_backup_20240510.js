@@ -1,5 +1,5 @@
 ﻿var ua, event, _snd;;
-let isMobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
+var isMobile = false;
 var isIOS = false;
 var _round;
 var _studyId;
@@ -19,7 +19,31 @@ window.onpopstate = function () {
     //this.handleGoback();
 };
 window.history.forward(0);
+// 앞으로가기 방지
+//document.oncontextmenu = function () { return false; };
 
+// 스크롤 막기 테스트
+//let scrollPosition = 0;
+//scrollPosition = window.pageYOffset;
+//const body = document.querySelector('body'); // style이 에러메세지 일으킴
+//body.style.top = `-${scrollPosition}px`;
+
+//function scrollDisable() {
+//    $('body').addClass('scrollDisable').on('scroll touchmove mousewheel', function (e) {
+//        e.preventDefault();
+//    });
+//}
+
+/* 스크롤 기능을 가능하게 해주는 클래스
+function scrollAble() {
+    $('body').removeClass('scrollDisable').off('scroll touchmove mousewheel');
+}*/
+//scrollDisable();
+// scroll
+
+
+// left: 37, up: 38, right: 39, down: 40,
+// spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
 var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
 function preventDefault(e) {
@@ -81,6 +105,94 @@ $(document).ready(function () {
 });
 
 /* 화면초기화, 좌표 [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ */
+
+// 화면 회전 시 실행되는 코드
+window.addEventListener("orientationchange", function () {
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    if (isPortrait) {
+        location.reload();
+    }
+});
+
+// 초기화시 화면크기에 맞춤
+$(document).ready(function () {
+
+    // device detection
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)
+        || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
+        isMobile = true;
+    } else {
+        isMobile = false;
+    }
+
+    var iDevices = [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+    ];
+
+    if (!!navigator.platform) {
+        while (iDevices.length) {
+            if (navigator.platform === iDevices.pop()) {
+                isIOS = true;
+            } else {
+                isIOS = false;
+            }
+        }
+    }
+
+    var nTop = ($(window).height() - 660) / 2;
+
+    if (!isMobile) {
+        if ($(window).width() > 1600) {
+            $("#divFrame").css('transform', 'scale(1.2)');
+        } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
+            $("#divFrame").css('transform', 'scale(1.0)');
+        } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
+            $("#divFrame").css('transform', 'scale(0.9)');
+        } else if ($(window).width() <= 1024) {
+            $("#divFrame").css('transform', 'scale(0.75)');
+        }
+    } else {
+        //alert($(window).height() + ', ' + $(window).width());
+
+        // if ($(window).width() > 1600) {
+        //     //alert('1')
+        //     $("#divFrame").css('transform', 'scale(1.2)');
+        // } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
+        //     //alert('2')
+        //     $("#divFrame").css('transform', 'scale(1.0)');
+        // } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
+        //     //alert('3')
+        //     $("#divFrame").css('transform', 'scale(0.9)');
+        // } else if ($(window).width() <= 1024 && $(window).width() > 800) {
+        //     //alert('4')
+        //     $("#divFrame").css('transform', 'scale(0.7)');
+        // } else if ($(window).width() <= 800) {
+        //     //alert('5')
+        //     $("#divFrame").css('transform', 'scale(0.6)');
+        // }
+
+        // if (navigator.userAgent.toUpperCase().search('IPHONE') > 0) { nTop = nTop + 15; }
+
+
+        // 살릴거
+        const mobileScale = screen.height / 610;
+        const tabletScale = screen.width / 1024;
+
+        if (mobileScale < 1) {
+            $("#divFrame").css("transform", "scale(" + mobileScale + ")");
+        } else {
+                $("#divFrame").css("transform", "scale(" + tabletScale + ")");
+            }
+        }
+
+    // $("#divFrame").css('margin-top', nTop.toString() + 'px');
+});
 
 
 function goToLogOut() {
@@ -152,144 +264,63 @@ function onGetStudyInfo(p1) {
     }
 }
 
-// 접속 디바이스 구별 함수 (https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js)
-const md = new MobileDetect(window.navigator.userAgent);
+//function DisableToolTip(elements) {
+//    for (var i = 0; i < elements.length; i++) {
+//        var element = elements[i];
+//        element.onmouseover = function () {
+//            this.setAttribute("org_title", this.title);
+//            this.title = "";
+//        };
+//        element.onmouseout = function () {
+//            this.title = this.getAttribute("org_title");
+//        };
+//    }
+//}
 
-// 화면 사이즈를 변경하기 위한 변수
-let screenWidth = screen.width;
-let screenHeight = screen.height;
-let isPortrait = screenHeight > screenWidth;
-let wrapperScalePortrait =  screenWidth / 1024;
-let wrapperScaleLandscape = screenHeight / 641;
-let wrapperScalePortraitToLandscape = screenHeight / 1024; // onload 세로 -> 가로 - 모바일
-let wrapperScaleLandscapeToPortrait = screenWidth / 641; // onload 가로 -> 세로 - 모바일
-let wrapperScalePortraitToLandscapeByTab = screenWidth / 1024; // onload 세로 -> 가로 - 태블릿
-let wrapperScaleLandscapeToPortraitByTab = screenHeight / 1024; // onload 가로 -> 세로 - 태블릿
-let targetLayout = "divFrame";
+// 리사이즈시 화면크기에 맞춤
+$(window).resize(function () {
+    var isMobile = false; //initiate as false
 
-// 화면 사이즈 조정 (학습 실행시)
-window.onload = () => {
-    if (isMobile) {
-        // 태블릿일 때
-        if (md.tablet()) {
-            if (isPortrait) {
-                document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-            } else {
-                document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-            }
-        }
-    
-        // 모바일일 때
-        else {
-            if (isPortrait) {
-                document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-            } else {
-                document.getElementById(targetLayout).style.transform = `scale(${wrapperScaleLandscape})`;
-            }
-        }
+    // device detection
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)
+        || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
+        isMobile = true;
+    } else {
+        isMobile = false;
     }
-    
-    else {
-        if (screenWidth < 1440) {
-            document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-        } 
-    }
-};
 
-// 화면 사이즈 조정 (디바이스 회전시)
-window.addEventListener("orientationchange", function() {
-    if (isMobile) {
-        // 태블릿일때
-        if (md.tablet()) {
-            switch(window.orientation) {
-                // onload 세로 -> 가로
-                case 0:
-                    if (isPortrait) {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortraitToLandscapeByTab})`;
-                    } else {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScaleLandscapeToPortraitByTab})`;
-                    }
-                    break;
-                // onload 가로 -> 세로
-                case 90:
-                case -90:
-                    if (isPortrait) {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScaleLandscapeToPortraitByTab})`;
-                    } else {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-                    }
-                    break;
-            }
+    if (!isMobile) {
+        var nTop = ($(window).height() - 640) / 2;
+        // $("#divFrame").css('margin-top', '' + nTop.toString() + 'px');
+
+        if ($(window).width() > 1600) {
+            $("#divFrame").css('transform', 'scale(1.2)');
+        } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
+            $("#divFrame").css('transform', 'scale(1.0)');
+        } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
+            $("#divFrame").css('transform', 'scale(0.9)');
+        } else if ($(window).width() <= 1024) {
+            $("#divFrame").css('transform', 'scale(0.8)');
+        } else if ($(window).width() <= 800) {
+            $("#divFrame").css('transform', 'scale(0.65)');
         }
-        // 모바일일때
-        else {
-            switch(window.orientation) {
-                // onload 세로 -> 가로
-                case 0:
-                    if (isPortrait) {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortrait})`;
-                    } else {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScalePortraitToLandscape})`;
-                    }
-                    break;
-                // onload 가로 -> 세로
-                case 90:
-                case -90:
-                    if (isPortrait) {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScaleLandscapeToPortrait})`;
-                    } else {
-                        document.getElementById(targetLayout).style.transform = `scale(${wrapperScaleLandscape})`;
-                    }
-                    break;
-            }
+    } else {
+        var nTop = ($(window).height() - 640) / 2;
+        // $("#divFrame").css('margin-top', '' + nTop.toString() + 'px');
+
+        if ($(window).width() > 1600) {
+            $("#divFrame").css('transform', 'scale(1.2)');
+        } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
+            $("#divFrame").css('transform', 'scale(1.0)');
+        } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
+            $("#divFrame").css('transform', 'scale(0.9)');
+        } else if ($(window).width() <= 1024) {
+            $("#divFrame").css('transform', 'scale(0.8)');
+        } else if ($(window).width() <= 800) {
+            $("#divFrame").css('transform', 'scale(0.65)');
         }
     }
 });
-
-// 리사이즈시 화면크기에 맞춤
-// $(window).resize(function () {
-//     var isMobile = false; //initiate as false
-
-//     // device detection
-//     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)
-//         || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
-//         isMobile = true;
-//     } else {
-//         isMobile = false;
-//     }
-
-//     if (!isMobile) {
-//         var nTop = ($(window).height() - 640) / 2;
-//         // $("#divFrame").css('margin-top', '' + nTop.toString() + 'px');
-
-//         if ($(window).width() > 1600) {
-//             $("#divFrame").css('transform', 'scale(1.2)');
-//         } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
-//             $("#divFrame").css('transform', 'scale(1.0)');
-//         } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
-//             $("#divFrame").css('transform', 'scale(0.9)');
-//         } else if ($(window).width() <= 1024) {
-//             $("#divFrame").css('transform', 'scale(0.8)');
-//         } else if ($(window).width() <= 800) {
-//             $("#divFrame").css('transform', 'scale(0.65)');
-//         }
-//     } else {
-//         var nTop = ($(window).height() - 640) / 2;
-//         // $("#divFrame").css('margin-top', '' + nTop.toString() + 'px');
-
-//         if ($(window).width() > 1600) {
-//             $("#divFrame").css('transform', 'scale(1.2)');
-//         } else if ($(window).width() <= 1600 && $(window).width() > 1280) {
-//             $("#divFrame").css('transform', 'scale(1.0)');
-//         } else if ($(window).width() <= 1280 && $(window).width() > 1024) {
-//             $("#divFrame").css('transform', 'scale(0.9)');
-//         } else if ($(window).width() <= 1024) {
-//             $("#divFrame").css('transform', 'scale(0.8)');
-//         } else if ($(window).width() <= 800) {
-//             $("#divFrame").css('transform', 'scale(0.65)');
-//         }
-//     }
-// });
 
 // 태블릿에서 스크롤되지 않도록
 addEventListener('touchmove', function (e) {
@@ -298,7 +329,22 @@ addEventListener('touchmove', function (e) {
     }
 });
 
+//(function ($) {
+//    $.fn.nodoubletapzoom = function () {
+//        $(this).bind('touchstart', function preventZoom(e) {
+//            var t2 = e.timeStamp
+//              , t1 = $(this).data('lastTouch') || t2
+//              , dt = t2 - t1
+//              , fingers = e.originalEvent.touches.length;
+//            $(this).data('lastTouch', t2);
+//            if (!dt || dt > 500 || fingers > 1) return; // not double-tap
 
+//            e.preventDefault(); // double tap - prevent the zoom
+//            // also synthesize click events we just swallowed up
+//            $(this).trigger('click').trigger('click');
+//        });
+//    };
+//})(jQuery);
 /* 화면초기화, 좌표 ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] */
 
 
